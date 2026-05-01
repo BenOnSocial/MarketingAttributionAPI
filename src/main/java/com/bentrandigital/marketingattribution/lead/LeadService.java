@@ -18,6 +18,7 @@ public class LeadService {
 
     @Transactional
     public Lead save(LeadRequest request) {
+        LeadScore score = scoringEngine.compute(request);
         Lead lead = Lead.builder()
                 .email(request.email())
                 .firstName(request.firstName())
@@ -25,9 +26,9 @@ public class LeadService {
                 .company(request.company())
                 .jobTitle(request.jobTitle())
                 .employees(request.employees())
+                .score(score)
                 .build();
 
-        LeadScore score = scoringEngine.compute(request);
 
 
         return leadRepository.save(lead);
