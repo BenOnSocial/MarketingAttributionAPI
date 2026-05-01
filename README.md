@@ -36,6 +36,108 @@ src/main/java/com/yourdomain/marketingapi/
 │   └── LeadRepository.java         # Data access
 ```
 
+```mermaid
+classDiagram
+namespace marketingattribution.lead {
+    class Lead {
+        -String id
+        -String email
+        -String firstName
+        -String lastName
+        -String company
+        -String jobTitle
+        -Integer employees
+
+        -Attribution attribution
+
+        -LeadScore score
+
+        -LocalDateTime createdAt
+
+        +setScore(LeadScore score)
+    }
+
+    class LeadController {
+        -LeadService leadService
+
+        +LeadController(LeadService leadService)
+
+        +createLead(LeadRequest request) : ResponseEntity~Lead~
+    }
+
+    class LeadRepository~Lead, String~
+
+    class LeadService {
+        -LeadRepository leadRepository
+        -ScoringEngine scoringEngine
+
+        +save(LeadRequest request) : Lead
+    }
+}
+
+namespace marketingattribution.lead.attribution {
+    class Attribution {
+        -String id
+        -Lead lead
+        -String source
+        -String campaign
+        -LocalDateTime createdAt
+    }
+
+    class AttributionRepository~Attribution, String~
+}
+
+namespace marketingattribution.lead.dto {
+    class LeadRequest {
+        +String email
+        +String firstName
+        +String lastName
+        +String company
+        +String jobTitle
+        +Integer employees
+        +String source
+        +String campaign
+    }
+
+    class LeadResponse {
+        +Integer totalScore
+        +Boolean isMql
+    }
+}
+
+namespace marketingattribution.lead.score {
+    class LeadScore {
+        -String id
+        -Lead lead
+        -Integer totalScore
+        -Boolean isMql
+        -LocalDateTime createdAt
+    }
+
+    class ScoringEngine {
+        +compute(LeadRequest request) LeadScore
+    }
+}
+
+namespace org.springframework.data.repository {
+    class CrudRepository~T, ID~ {
+        +~S extends T~ save(S entity)
+    }
+}
+
+CrudRepository~T, ID~ <|-- AttributionRepository
+CrudRepository~T, ID~ <|-- LeadRepository
+
+Lead "1" --> "1" Attribution
+Lead "1" --> "1" LeadScore
+
+LeadController *-- LeadService
+
+LeadService *-- LeadRepository
+LeadService *-- ScoringEngine
+
+```
+
 ## 🚀 Getting Started
 
 ### Prerequisites
