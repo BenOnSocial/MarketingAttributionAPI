@@ -1,8 +1,8 @@
-# Marketing Attribution & Lead Scoring API (Spring Boot)
+# Marketing Attribution & Lead Scoring API (Spring Boot 4.0)
 
 An enterprise-grade Java microservice designed to ingest, score, and relationally map inbound marketing leads. Built with **Java 26** and **Spring Boot 4.0**, this project demonstrates modern Domain-Driven Design (DDD), strict schema validation, database migration management, and secure observability.
 
-## 🚀 Technical Highlights
+## Technical Highlights
 
 - **Domain-Driven Design (DDD):** Packaged by feature rather than by layer, ensuring high cohesion, low coupling, and strict encapsulation of domain logic.
 - **Deterministic Schema Management:** Disables Hibernate's risky `ddl-auto` generation in favor of **Flyway**, ensuring all database schema changes are immutable, version-controlled, and CI/CD ready.
@@ -11,7 +11,7 @@ An enterprise-grade Java microservice designed to ingest, score, and relationall
 - **Distributed-Ready Identifiers:** Replaces traditional auto-incrementing integers with **UUIDs** across all entities to support database sharding and asynchronous event-driven queues (e.g., Kafka).
 - **Secure Observability:** Isolates **Spring Boot Actuator** telemetry and health checks to a dedicated management port, preventing public information disclosure while enabling Kubernetes readiness/liveness probes.
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Language:** Java 26
 - **Framework:** Spring Boot 4.0.x
@@ -21,7 +21,7 @@ An enterprise-grade Java microservice designed to ingest, score, and relationall
 - **Validation:** Jakarta Bean Validation
 - **Tooling:** Gradle, Lombok
 
-## 📁 Architectural Structure
+## Architectural Structure
 
 The codebase strictly adheres to Package-by-Feature to isolate business domains:
 
@@ -138,7 +138,7 @@ LeadService *-- ScoringEngine
 
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - JDK 26+
@@ -157,7 +157,7 @@ LeadService *-- ScoringEngine
    ```
    *Note: On startup, Flyway will automatically execute `V1__Create_lead_tables.sql` to construct the database before Spring Boot accepts traffic.*
 
-## 🔌 API Documentation
+## API Documentation
 
 ### POST `/leads`
 
@@ -170,7 +170,7 @@ curl -X POST http://localhost:3000/leads \
  -d '{"email": "director@enterprise.com", "firstName": "John", "lastName": "Smith", "jobTitle": "Director of Engineering", "employees": 1200, "source": "LinkedIn"}'
 ```
 
-## 📊 Observability (Actuator)
+## Observability (Actuator)
 
 To prevent public exposure of internal infrastructure, Spring Boot Actuator is mapped to a secondary management port.
 
@@ -184,7 +184,7 @@ curl http://localhost:3001/actuator/health
 curl http://localhost:3001/actuator/flyway
 ```
 
-## 🧠 Architectural Decisions
+## Architectural Decisions
 
 - **Why Flyway over Hibernate DDL?** Relying on Hibernate's `ddl-auto=update` can cause catastrophic schema drifts and table locks in production. By combining Flyway with `spring.jpa.hibernate.ddl-auto=validate`, the application guarantees the Java domain model perfectly matches the physical database schema before starting.
 - **Why Isolate the Scoring Engine?** By extracting the lead scoring logic into a standalone `@Component`, the business rules can be rigorously unit-tested without loading the Spring Application Context or mocking database connections.
